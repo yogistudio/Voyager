@@ -1,4 +1,6 @@
 # 旅行者探测器系统
+
+** 项目正在快速迭代中，请即时更新源代码 https://github.com/ody5sey/Voyager/ **
 ![旅行者2号](img/Voyager.jpg)
 
 ##  0x01 功能介绍
@@ -58,6 +60,9 @@ Web框架: **Flask(1.1.1)**
 分析了一下sqlmap的源代码，从中提取出了sqlmap用于WAF探测的代码并进行了封装, 用来探测类http端口是否有WAF保护，此功能并未在前台展示，一些模块比如目录扫描会自动进行调用
 
 ### 0x007 主动扫描
+
+**此功能暂时处于冻结状态,我正在测试AWVS13的API **
+
 主动扫描用的是AWVS12，已经封装在Docker里了，通过AWVS12的restful进行API调用
 
 ## 0x03 安装教程
@@ -67,7 +72,7 @@ Web框架: **Flask(1.1.1)**
 
 
 ### 0x001 下载源码安装
-我把步骤都写在run.sh里了，理论上run.sh适应与Debian系操作系统(包括Debian, Kali, Ubuntu)
+我把步骤都写在run.sh里了，理论上run.sh适应于Debian系操作系统(包括Debian, Kali, Ubuntu)
 
 ```bash
 git clone https://github.com/ody5sey/Voyager.git
