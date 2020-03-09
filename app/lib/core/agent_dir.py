@@ -115,7 +115,8 @@ class ControllerDirs():
 
             target_content = sess["target"]
 
-            for k in ast.literal_eval(target_content):
+            for k in json.loads(target_content):
+                print(k, "ha")
                 self.target_queue.put_nowait(k)
 
             while True:
@@ -248,9 +249,11 @@ class ControllerDirs():
     @classmethod
     @threaded
     def thread_start(cls, method, task_name, project, pid):
+
         app = cls(method=method, task_name=task_name, project=project, pid=pid)
         # 类http标签进行waf检查
         info = app._waf_check()
+
         if info == "flag":
             mongo.db.tasks.update_one(
                 {"id": pid},
