@@ -277,7 +277,6 @@ class ControllerDirs():
         app = cls(method=method, task_name=task_name, project=project, pid=pid)
         # 类http标签进行waf检查
         info = app._waf_check()
-        print(info)
 
         if info == "flag":
             mongo.db.tasks.update_one(

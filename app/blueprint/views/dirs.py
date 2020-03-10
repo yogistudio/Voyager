@@ -104,7 +104,6 @@ def dirs_controller():
                 target_list = list()
 
                 for i in ip_address.split('\n'):
-                    print(i)
 
                     if len(i) > 0:
                         new_dict = dict()
