@@ -256,7 +256,7 @@ class ControllerDirs():
                 mongo.db.tasks.update_one(
                     {"id": pid},
                     {'$set': {
-                        'status': 'Pause',
+                        'status': 'Wait',
                     }
                     }
                 )

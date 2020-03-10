@@ -119,7 +119,7 @@ def finger_controller():
                         url = i
                         _url = urlparse(url)
                         hostname = _url.hostname
-                        port = _url.port if _url.port != None else 80
+                        port = _url.port if _url.port is not None else 80
 
                         port_dict = {"id": task_id, "address": hostname, "mac": "Null", "vendor": "Null", "port": port,
                                      "hostname": "Null", "create_date": datetime.datetime.now(),
@@ -145,7 +145,7 @@ def finger_controller():
                 data = {"status": 200, "msg": "项目添加成功"}
                 return jsonify(data)
 
-            if child_task_name != None:
+            if child_task_name is not None:
                 # 从项目选择的方案
                 task_id_new = get_uuid()
                 task = {"id": task_id_new, "create_date": datetime.datetime.now(), "parent_name": project,
@@ -165,11 +165,11 @@ def finger_controller():
         if action == "delete":
 
             task = mongo.db.tasks.find_one({'id': task_id})
-            if task == None:
+            if task is None:
                 data = {"status": 200, "msg": "项目删除成功"}
                 return jsonify(data)
 
-            if task["contain_id"] != "Null":
+            if task["contain_id"] is not "Null":
                 Controller.stop_contain(task["contain_id"])
             mongo.db.tasks.delete_one({'id': task_id})
             mongo.db.ports.delete_many({'pid': task_id})
@@ -179,7 +179,7 @@ def finger_controller():
             return jsonify(data)
 
         if action == "export":
-            if mongo.db.tasks.find_one({'id': task_id})["status"] != "Finished":
+            if mongo.db.tasks.find_one({'id': task_id})["status"] is not "Finished":
                 result = {"status": 403, "msg": "任务还没有完成"}
                 return jsonify(result, safe=False)
 
@@ -202,7 +202,7 @@ def finger_controller():
                 result = {"status": 403, "msg": "没有结果"}
                 return jsonify(result)
 
-            if mongo.db.exports.find_one({"pid": task_id}) != None:
+            if mongo.db.exports.find_one({"pid": task_id}) is not None:
                 result = {"status": 403, "msg": "任务已存在，请前往导出页面查看"}
                 return jsonify(result)
 
