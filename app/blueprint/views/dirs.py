@@ -92,9 +92,9 @@ def dirs_controller():
 
         if action == "add":
 
-            if mongo.db.tasks.find({'status': "Running", "hack_type": "目录扫描"}).count() > 0:
-                data = {"status": 403, "msg": "现在已有项目正在运行，请稍后添加"}
-                return jsonify(data)
+            # if mongo.db.tasks.find({'status': "Running", "hack_type": "目录扫描"}).count() > 0:
+            #     data = {"status": 403, "msg": "现在已有项目正在运行，请稍后添加"}
+            #     return jsonify(data)
 
             if len(ip_address) != 0:
                 # 输入文本的方案
