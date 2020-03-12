@@ -81,6 +81,12 @@ bash run.sh
 
 国内用户建议运行run_cn.sh，会使用国内源进行安装
 
+```bash
+git clone https://github.com/ody5sey/Voyager.git
+cd Voyager
+bash run_cn.sh
+```
+
 ### 0x002 运行
 
 ```bash
@@ -100,17 +106,6 @@ python manager.py
 
 默认的用户名和密码是luffy:s1riu5
 
-如需要修改监听地址为0.0.0.0，请将manager.py修改为
-```bash
-from app import create_app
-
-app = create_app()
-
-if __name__ == "__main__":
-    app.run(
-   host = '0.0.0.0',
-)
-```
 
 ![展示](img/img4.png)
 

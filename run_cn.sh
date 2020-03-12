@@ -5,6 +5,7 @@ if [[ $EUID -ne 0 ]]; then
    echo "请使用root账户运行该脚本"
    exit 1
 fi
+
 # 安装docker-ce和依赖
 curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | apt-key add -
 echo 'deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian buster stable' > /etc/apt/sources.list.d/docker.list
@@ -25,7 +26,7 @@ echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 source ~/.bashrc
 
 # 使用pyenv淘宝镜像源安装python3.8.1
-wget https://npm.taobao.org/mirrors/python/3.8.1/Python-3.8.1.tar.xz -P ~/.pyenv/cache/;pyenv install 3.8.1 
+wget https://npm.taobao.org/mirrors/python/3.8.1/Python-3.8.1.tar.xz -P ~/.pyenv/cache/;pyenv install 3.8.1
 pyenv global 3.8.1
 
 # 安装pip3
