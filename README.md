@@ -79,19 +79,38 @@ cd Voyager
 bash run.sh
 ```
 
+国内用户建议运行run_cn.sh，会使用国内源进行安装
+
 ### 0x002 运行
 
 ```bash
 source ~/.bashrc
 pipenv shell
+pip install -r requirements.txt
 python manager.py
 ```
 
-添加新用户
-curl http://127.0.0.1:5000/add
-然后访问 http://127.0.0.1:5000/
+运行后没有默认用户
+
+请访问http://127.0.0.1:5000/add 以添加新用户
+
+或使用 curl http://127.0.0.1:5000/add
+
+然后访问 http://127.0.0.1:5000/ 登录即可
 
 默认的用户名和密码是luffy:s1riu5
+
+如需要修改监听地址为0.0.0.0，请将manager.py修改为
+```bash
+from app import create_app
+
+app = create_app()
+
+if __name__ == "__main__":
+    app.run(
+   host = '0.0.0.0',
+)
+```
 
 ![展示](img/img4.png)
 

@@ -169,7 +169,7 @@ def finger_controller():
                 data = {"status": 200, "msg": "项目删除成功"}
                 return jsonify(data)
 
-            if task["contain_id"] is not "Null":
+            if task["contain_id"] != "Null":
                 Controller.stop_contain(task["contain_id"])
             mongo.db.tasks.delete_one({'id': task_id})
             mongo.db.ports.delete_many({'pid': task_id})
@@ -179,7 +179,7 @@ def finger_controller():
             return jsonify(data)
 
         if action == "export":
-            if mongo.db.tasks.find_one({'id': task_id})["status"] is not "Finished":
+            if mongo.db.tasks.find_one({'id': task_id})["status"] != "Finished":
                 result = {"status": 403, "msg": "任务还没有完成"}
                 return jsonify(result, safe=False)
 
@@ -202,7 +202,7 @@ def finger_controller():
                 result = {"status": 403, "msg": "没有结果"}
                 return jsonify(result)
 
-            if mongo.db.exports.find_one({"pid": task_id}) is not None:
+            if mongo.db.exports.find_one({"pid": task_id}) != None:
                 result = {"status": 403, "msg": "任务已存在，请前往导出页面查看"}
                 return jsonify(result)
 
