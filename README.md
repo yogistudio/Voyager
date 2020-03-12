@@ -80,6 +80,8 @@ cd Voyager
 bash run.sh
 ```
 
+国内用户建议运行run_cn.sh，会使用国内源进行安装
+
 ### 0x002 运行
 
 ```bash
