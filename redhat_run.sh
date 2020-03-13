@@ -1,20 +1,17 @@
 #!/usr/bin/env bash
 
-# 判断是否为root用户
-if [[ $EUID -ne 0 ]]; then
-   echo "请使用root账户运行该脚本"
-   exit 1
-fi
+yum remove docker docker-common docker-selinux docker-engine
+yum install -y yum-utils git device-mapper-persistent-data lvm2 wget
+wget -O /etc/yum.repos.d/docker-ce.repo https://download.docker.com/linux/centos/docker-ce.repo
+sed -i 's+download.docker.com+mirrors.tuna.tsinghua.edu.cn/docker-ce+' /etc/yum.repos.d/docker-ce.repo
+yum makecache fast
+yum install -y docker-ce
 
-# 安装docker-ce和依赖
-curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | apt-key add -
-echo 'deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/debian buster stable' > /etc/apt/sources.list.d/docker.list
-apt update && apt install docker-ce -y && apt install build-essential libbz2-dev libssl-dev libreadline-dev libsqlite3-dev -y
-
-# 更换为中科大仓库镜像
+mkdir /etc/docker
 echo '{"registry-mirrors": ["https://docker.mirrors.ustc.edu.cn/"]}' > /etc/docker/daemon.json
+systemctl restart docker
 systemctl enable docker
-systemctl start docker
+
 
 # 安装pyenv
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
