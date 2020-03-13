@@ -71,6 +71,7 @@ Web框架: **Flask(1.1.1)**
 
 
 ### 0x001 下载源码安装
+
 我把步骤都写在run.sh里了，理论上run.sh适应于Debian系操作系统(包括Debian, Kali, Ubuntu)
 
 ```bash
@@ -86,6 +87,15 @@ git clone https://github.com/ody5sey/Voyager.git
 cd Voyager
 bash run_cn.sh
 ```
+
+红帽系操作系统(包括redhat, fedora, centos)请用redhat_run.sh
+
+```bash
+git clone https://github.com/ody5sey/Voyager.git
+cd Voyager
+bash redhat_run.sh
+```
+
 
 ### 0x002 运行
 

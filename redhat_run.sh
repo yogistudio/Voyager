@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-yum remove docker docker-common docker-selinux docker-engine
-yum install -y yum-utils git device-mapper-persistent-data lvm2 wget
+yum remove -y docker docker-common docker-selinux docker-engine
+yum install -y yum-utils gcc git libffi-devel device-mapper-persistent-data lvm2 wget zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel
 wget -O /etc/yum.repos.d/docker-ce.repo https://download.docker.com/linux/centos/docker-ce.repo
 sed -i 's+download.docker.com+mirrors.tuna.tsinghua.edu.cn/docker-ce+' /etc/yum.repos.d/docker-ce.repo
 yum makecache fast
