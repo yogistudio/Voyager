@@ -92,7 +92,6 @@ bash run_cn.sh
 ```bash
 source ~/.bashrc
 pipenv shell
-pip install -r requirements.txt
 python manager.py
 ```
 
