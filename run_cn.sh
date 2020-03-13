@@ -29,9 +29,6 @@ source ~/.bashrc
 wget https://npm.taobao.org/mirrors/python/3.8.1/Python-3.8.1.tar.xz -P ~/.pyenv/cache/;pyenv install 3.8.1
 pyenv global 3.8.1
 
-# 安装pip3
-apt install python3-pip -y
-
 # 更换为pypi清华镜像
 pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple pip -U
 pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
