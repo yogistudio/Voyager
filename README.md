@@ -80,12 +80,12 @@ cd Voyager
 bash run.sh
 ```
 
-国内用户建议运行run_cn.sh，会使用国内源进行安装
+国内用户建议运行debian_run.sh，会使用国内源进行安装
 
 ```bash
 git clone https://github.com/ody5sey/Voyager.git
 cd Voyager
-bash run_cn.sh
+bash debian_run.sh
 ```
 
 红帽系操作系统(包括redhat, fedora, centos)请用redhat_run.sh
