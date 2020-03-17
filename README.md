@@ -173,3 +173,6 @@ python manager.py
 五. 为什么漏洞扫描没有扫描到漏洞
 
 现在漏洞扫描用的144个POC，来自于xunfeng和kunpeng，这两个框架检测不到扫描器也检测不到，我正在测试其他的POC框架
+
+### 0x07 微信讨论群
+![wei](img/weixin.jpg)
