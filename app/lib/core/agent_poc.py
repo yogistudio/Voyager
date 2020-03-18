@@ -175,6 +175,9 @@ class ControllerPocs(object):
 
                     """
 
+                    print(m)
+                    print(n)
+
                     if m.get("vul_service") in n.get("service"):
 
                         if n.get("service") in ["http", "ssl", "https"]:
