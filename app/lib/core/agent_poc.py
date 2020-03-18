@@ -14,7 +14,7 @@ import json
 THREADS = 10
 
 
-class ControllerPocs():
+class ControllerPocs(object):
     # 控制并发线程数
     threads_queue = queue.Queue(maxsize=THREADS)
     for i in range(THREADS):
@@ -56,7 +56,7 @@ class ControllerPocs():
                 for index in range(0, THREADS):
                     self.threads_queue.get()
                     param = self.target_queue.get()
-                    attacker = threading.Thread(target=waf_check, args=(param, self.list_queue))
+                    attacker = threading.Thread(target=waf_check, args=(param, list_queue))
                     attacker.start()
                     target_list.append(attacker)
 
