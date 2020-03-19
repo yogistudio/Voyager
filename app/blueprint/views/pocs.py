@@ -157,7 +157,7 @@ def pocs_controllers():
                 result = {"status": 403, "msg": "没有漏洞"}
                 return jsonify(result)
 
-            if mongo.db.exports.find_one({"pid": task_id}) is None:
+            if mongo.db.exports.find_one({"pid": task_id}) is not None:
                 result = {"status": 403, "msg": "任务已存在，请前往导出页面查看"}
                 return jsonify(result)
 
