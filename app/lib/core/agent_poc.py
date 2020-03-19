@@ -175,8 +175,8 @@ class ControllerPocs(object):
 
                     """
 
-                    print(m)
-                    print(n)
+                    print(f"m={m}", "poc")
+                    print(f"m={n}", "port")
 
                     if m.get("vul_service") in n.get("service"):
 
