@@ -20,9 +20,9 @@ echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 source ~/.bashrc
 
-# 使用pyenv淘宝镜像源安装python3.8.1
-wget https://npm.taobao.org/mirrors/python/3.8.1/Python-3.8.1.tar.xz -P ~/.pyenv/cache/;pyenv install 3.8.1
-pyenv global 3.8.1
+# 使用pyenv淘宝镜像源安装python3.8.2
+wget https://npm.taobao.org/mirrors/python/3.8.2/Python-3.8.2.tar.xz -P ~/.pyenv/cache/;pyenv install 3.8.2
+pyenv global 3.8.2
 
 # 更换为pypi清华镜像
 pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple pip -U
@@ -42,7 +42,7 @@ docker pull ap0llo/poc:bugscan
 docker pull mongo:4.1
 
 # 运行数据库
-docker run --rm -d -p 127.0.0.1:27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=shad0wBrok3r mongo:4.1
+docker run -d --restart=always -p 127.0.0.1:27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=shad0wBrok3r mongo:4.1
 
 # 初始化xunfeng镜像
 docker run --rm --network="host" ap0llo/poc:xunfeng init
