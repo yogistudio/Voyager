@@ -6,3 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
+flask = "*"
+flask-pymongo = "*"
+flask-wtf = "*"
+xlsxwriter = "*"
+docker = "*"

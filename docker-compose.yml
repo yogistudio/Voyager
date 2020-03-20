@@ -4,7 +4,7 @@ services:
     image: mongo:4.1
     restart: always
     ports:
-      - 27017:27017
+      - 127.0.0.1:27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=shad0wBrok3r
@@ -13,7 +13,7 @@ services:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - 127.0.0.1:8081:8081
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=root
       - ME_CONFIG_MONGODB_ADMINPASSWORD=shad0wBrok3r
