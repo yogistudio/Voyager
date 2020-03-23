@@ -2,8 +2,8 @@
 
 # 判断是否为root用户
 if [[ $EUID -ne 0 ]]; then
-   echo "请使用root账户运行该脚本"
-   exit 1
+    echo "请使用root账户运行该脚本"
+    exit 1
 fi
 
 # 安装docker-ce和依赖
@@ -31,6 +31,9 @@ pyenv global 3.8.2
 pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple pip -U
 pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
+# 安装docker-compose
+pip3 install docker-compose
+
 # 安装pipenv
 pip3 install pipenv
 pipenv install
@@ -44,18 +47,8 @@ docker pull ap0llo/poc:kunpeng
 docker pull ap0llo/poc:bugscan
 docker pull mongo:4.1
 
-# 运行数据库
-docker run --rm -d --restart=always  -p 127.0.0.1:27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=shad0wBrok3r mongo:4.1
-
-# 初始化xunfeng镜像
-docker run --rm --network="host" ap0llo/poc:xunfeng init
-
-# 初始化kunpeng镜像
-docker run --rm --network="host" ap0llo/poc:kunpeng init
-
-# 初始化bugscan镜像
-docker run --rm --network="host" ap0llo/poc:bugscan init
+# 运行数据库并初始化poc
+docker-compose up -d
 
 # 结束
 echo "OK"
-
