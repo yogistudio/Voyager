@@ -1,4 +1,6 @@
 # 旅行者探测器系统
+
+**项目正在快速迭代中，请即时更新源代码 https://github.com/ody5sey/Voyager/**
 ![旅行者2号](img/Voyager.jpg)
 
 ##  0x01 功能介绍
@@ -7,8 +9,6 @@
 目前平台还在持续开发中，肯定有不少问题和需要改进的地方，欢迎大佬们提交建议和Bug，也非常欢迎各位大佬Star或者是Fork
 
 ![展示](img/img0.png)
-
-**系统数据是伪造的**
 
 ## 0x02 系统结构
 
@@ -34,6 +34,7 @@ Web框架: **Flask(1.1.1)**
 ### 0x001 域名扫描
 采用的是[oneforall](https://github.com/shmilylty/OneForAll)，当前使用的版本是0.0.9,我修改了部分代码，使得工具和平台能够结合
 
+
 ![](img/img5.png)
 
 ### 0x002 端口扫描
@@ -52,50 +53,75 @@ Web框架: **Flask(1.1.1)**
 ### 0x005 漏洞扫描
 漏洞扫描功能现在引入了xunfeng和kunpeng的poc，一共144个，标签以nmap的标签为主，比如445端口的标签是microsoft-ds， 3389的标签是ms-wbt-server。这两个框架合并存在一定问题，比如说:xunfeng和kunpeng的poc主要针对非WEB应用，两个框架的POC存在重复的问题.我做了一定的去重工作，后期随着POC的增多，去重会是一个问题
 
+**漏洞扫描的任务只能从端口扫描和指纹识别的数据中继承，也就是说必须完成端口扫描或者是指纹识别才能获取到数据**
+
 ### 0x006 WAF探测
 分析了一下sqlmap的源代码，从中提取出了sqlmap用于WAF探测的代码并进行了封装, 用来探测类http端口是否有WAF保护，此功能并未在前台展示，一些模块比如目录扫描会自动进行调用
 
 ### 0x007 主动扫描
+
+**此功能暂时处于冻结状态,我正在测试AWVS13的API**
+
 主动扫描用的是AWVS12，已经封装在Docker里了，通过AWVS12的restful进行API调用
 
 ## 0x03 安装教程
 
 这里以Kali linux 2019.4作为基础操作系统
 
-### 0x001 安装docker 
-由于Kali默认没有安装Docker，需要手动安装
-
-```bash
-# curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-# echo 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable' > /etc/apt/sources.list.d/docker.list
-# apt-get update && apt-get install docker-ce
-# systemctl enable docker
-# systemctl start docker
-```
-
-![](img/img3.png)
 
 
-### 0x002 下载源码安装
+### 0x001 下载源码安装
+
+我把步骤都写在shell/run.sh里了
 
 ```bash
 git clone https://github.com/ody5sey/Voyager.git
 cd Voyager
-bash run.sh
+bash shell/run.sh
+```
+
+国内用户(Debian, Ubuntu)建议运行debian_run.sh，会使用国内源进行安装
+
+```bash
+git clone https://github.com/ody5sey/Voyager.git
+cd Voyager
+bash shell/debian_run.sh
+```
+
+Kali用户使用shell/kali_run.sh
+```bash
+git clone https://github.com/ody5sey/Voyager.git
+cd Voyager
+bash shell/kali_run.sh
+```
+
+红帽系操作系统(包括redhat, fedora, centos)请用redhat_run.sh
+
+```bash
+git clone https://github.com/ody5sey/Voyager.git
+cd Voyager
+bash shell/redhat_run.sh
 ```
 
 
-### 0x003 运行
+### 0x002 运行
 
 ```bash
+source ~/.bashrc
+pipenv shell
 python manager.py
 ```
 
-添加新用户
-curl http://127.0.0.1:5000/add
-然后访问 http://127.0.0.1:5000/
+运行后没有默认用户
+
+请访问http://127.0.0.1:5000/add 以添加新用户
+
+或使用 curl http://127.0.0.1:5000/add
+
+然后访问 http://127.0.0.1:5000/ 登录即可
 
 默认的用户名和密码是luffy:s1riu5
+
 
 ![展示](img/img4.png)
 
@@ -128,4 +154,38 @@ curl http://127.0.0.1:5000/add
 
 - [ ] 各组件的协调优化以及BUG修复, 漏报，误报的修复
 - [ ] 指纹库的更新和poc库的更新
+
+### 0x06 Q&A
+
+一. 为什么域名扫描添加任务之后长时间不动
+
+关于单个任务进度条的说明:ap0llo/oneforall:0.0.8采用的是oneforall:0.0.8版本。还是存在单个任务进度统计的，但是ap0llo/oneforall:0.0.9由于oneforall代码结构的变化，无法将爆破任务的进度数据分离出来，所以无法统计，在200M宽带下，单个域名扫描任务需要时间最长六分钟，从0.00%直接跳到100.00%
+
+
+二. 为什么漏洞扫描无法添加数据
+
+漏洞扫描采用的是POC扫描，要想扫描端口或者是网站必须有标签，比如21端口是"ftp", 22端口是"ssh",poc要根据这些标签才能扫描，这也意味着POC扫描必须在端口扫描和指纹识别之后，当有端口扫描或者是指纹识别的任务完成之后就能在漏洞扫描下面看到任务列表了
+
+
+三. 为什么扫描这么慢
+
+扫描速度受限与网速和系统本身的硬件性能，不建议在虚拟机(vmware,virtualbox, pd)上跑,虚拟网卡有性能损失
+
+
+四. 为什么端口扫描很慢
+
+在这个框架下，性能测试的极限是百兆内网全C段，全端口扫描需要时间是10分钟，但是考虑到个人的宽带和家用路由性能，全速扫描的话，路由器分分钟瘫痪，所以我将性能进行了大幅压缩，所以端口扫描的时间变长了
+
+
+五. 为什么漏洞扫描没有扫描到漏洞
+
+现在漏洞扫描用的144个POC，来自于xunfeng和kunpeng，这两个框架检测不到扫描器也检测不到，我正在测试其他的POC框架
+
+### 0x07 微信讨论群
+![wei](img/weixin.jpg)
+
+
+### 0x08 免责声明
+
+本工具仅限于合法授权的企业安全建设，用于甲方安全人员自检。在使用本工具过程中，您应确保自己所有行为符合当地的法律法规，并且已经取得了足够的授权。 如您在使用本工具的过程中存在任何非法行为，您需自行承担所有后果，本工具所有作者和所有贡献者不承担任何法律及连带责任。 除非您已充分阅读、完全理解并接受本协议所有条款，否则，请您不要安装并使用本工具。 您的使用行为或者您以其他任何明示或者默示方式表示接受本协议的，即视为您已阅读并同意本协议的约束。
 

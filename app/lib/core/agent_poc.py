@@ -9,11 +9,12 @@ import time
 import queue
 import datetime
 import threading
+import json
 
 THREADS = 10
 
 
-class ControllerPocs():
+class ControllerPocs(object):
     # 控制并发线程数
     threads_queue = queue.Queue(maxsize=THREADS)
     for i in range(THREADS):
@@ -21,8 +22,6 @@ class ControllerPocs():
 
     # 存放目标线程数
     target_queue = queue.Queue()
-
-    list_queue = queue.Queue()
 
     def __init__(self, task_name, project, pid):
 
@@ -33,10 +32,10 @@ class ControllerPocs():
     # waf检查函数
     def _waf_check(self):
 
+        list_queue = queue.Queue()
+
         ports = mongo.db.ports.find({"parent_name": self.task_name})
         domains = mongo.db.subdomains.find({"parent_name": self.task_name})
-
-        print(ports.count(), domains.count())
 
         for j in ports:
             self.target_queue.put_nowait(j)
@@ -57,7 +56,7 @@ class ControllerPocs():
                 for index in range(0, THREADS):
                     self.threads_queue.get()
                     param = self.target_queue.get()
-                    attacker = threading.Thread(target=waf_check, args=(param, self.list_queue))
+                    attacker = threading.Thread(target=waf_check, args=(param, list_queue))
                     attacker.start()
                     target_list.append(attacker)
 
@@ -66,7 +65,7 @@ class ControllerPocs():
                 for index in range(0, self.target_queue.qsize()):
                     self.threads_queue.get()
                     param = self.target_queue.get()
-                    attacker = threading.Thread(target=waf_check, args=(param, self.list_queue))
+                    attacker = threading.Thread(target=waf_check, args=(param, list_queue))
                     attacker.start()
                     target_list.append(attacker)
 
@@ -75,7 +74,7 @@ class ControllerPocs():
 
                 self.threads_queue.put(" ")
 
-        return list(self.list_queue.queue)
+        return list(list_queue.queue)
 
     # cms指纹识别函数
     def _cms_finger(self, target_list):
@@ -106,7 +105,7 @@ class ControllerPocs():
                 if m["flag"] == "xunfeng":
 
                     if n["service"] == m["vul_service"]:
-                        new_dict = {}
+                        new_dict = dict()
                         new_dict["ip"] = n["address"]
                         new_dict["port"] = n["port"]
                         new_dict["poc"] = m["poc_name"]
@@ -117,7 +116,7 @@ class ControllerPocs():
 
                     if "tag" in n:
                         if n["tag"] == m["vul_service"]:
-                            new_dict = {}
+                            new_dict = dict()
                             new_dict["ip"] = n["address"]
                             new_dict["port"] = n["port"]
                             new_dict["poc"] = m["poc_name"]
@@ -176,27 +175,80 @@ class ControllerPocs():
 
                     """
 
-                    if m["vul_service"] in n["service"]:
+                    if m.get("vul_service", "") is not None and n.get("service", "") is not None:
 
-                        attack_dict = {'netloc': n["http_address"], "poc": m["poc_name"], "keyword": n["service"],
-                                       "parent_name": self.project}
-                        if attack_dict not in attack_list_bugscan:
-                            attack_list_bugscan.append(attack_dict)
+                        if m.get("vul_service", "") in n.get("service", ""):
 
-                    if m["vul_service"] in n["category"]:
+                            if n.get("service", "") in ["http", "ssl", "https"]:
+                                if 'http' in n.get("service"):
+                                    scheme = 'http'
+                                    if n.get("service") in ['https', 'ssl'] or n.get("port") == 443:
+                                        scheme = 'https'
+                                    target_url = '{}://{}:{}'.format(scheme, n["address"], n["port"])
 
-                        attack_dict = {'netloc': n["http_address"], "poc": m["poc_name"], "keyword": n["category"],
-                                       "parent_name": self.project}
-                        if attack_dict not in attack_list_bugscan:
-                            attack_list_bugscan.append(attack_dict)
+                                    attack_dict = {'netloc': target_url, "poc": m["poc_name"], "keyword": n["service"],
+                                                   "parent_name": self.project}
+                                    if attack_dict not in attack_list_bugscan:
+                                        attack_list_bugscan.append(attack_dict)
 
-        poc_num = attack_list_xunfeng + attack_list_kunpeng
+                            else:
+                                target_url = '{}:{}'.format(n["address"], n["port"])
 
+                                attack_dict = {'netloc': target_url, "poc": m["poc_name"], "keyword": n["service"],
+                                               "parent_name": self.project}
+                                if attack_dict not in attack_list_bugscan:
+                                    attack_list_bugscan.append(attack_dict)
+
+                    else:
+                        print(m, n, "service")
+
+                    if m.get("vul_service") is not None and n.get("category") is not None:
+
+                        if m.get("vul_service") in n.get("category"):
+
+                            if n.get("category") in ["http", "ssl", "https"]:
+                                if 'http' in n.get("category"):
+                                    scheme = 'http'
+                                    if n.get("category") in ['https', 'ssl'] or n.get("port") == 443:
+                                        scheme = 'https'
+                                    target_url = '{}://{}:{}'.format(scheme, n["address"], n["port"])
+
+                                    attack_dict = {'netloc': target_url, "poc": m["poc_name"], "keyword": n["service"],
+                                                   "parent_name": self.project}
+                                    if attack_dict not in attack_list_bugscan:
+                                        attack_list_bugscan.append(attack_dict)
+
+                            else:
+                                target_url = '{}:{}'.format(n["address"], n["port"])
+
+                                attack_dict = {'netloc': target_url, "poc": m["poc_name"], "keyword": n["service"],
+                                               "parent_name": self.project}
+                                if attack_dict not in attack_list_bugscan:
+                                    attack_list_bugscan.append(attack_dict)
+
+                    else:
+                        print(m, n, "category")
+
+                    # if m["vul_service"] in n["service"]:
+                    #
+                    #     attack_dict = {'netloc': n["http_address"], "poc": m["poc_name"], "keyword": n["service"],
+                    #                    "parent_name": self.project}
+                    #     if attack_dict not in attack_list_bugscan:
+                    #         attack_list_bugscan.append(attack_dict)
+                    #
+                    # if m["vul_service"] in n["category"]:
+                    #
+                    #     attack_dict = {'netloc': n["http_address"], "poc": m["poc_name"], "keyword": n["category"],
+                    #                    "parent_name": self.project}
+                    #     if attack_dict not in attack_list_bugscan:
+                    #         attack_list_bugscan.append(attack_dict)
+
+        poc_num = attack_list_xunfeng + attack_list_kunpeng + attack_list_bugscan
 
         sess = mongo.db.tasks.find_one({"id": self.pid})
 
         # 项目被删除的时候
-        if sess == None:
+        if sess is None:
             return True
 
         if len(poc_num) == 0:
@@ -214,10 +266,10 @@ class ControllerPocs():
 
             return True
 
-        target_dict = {}
+        target_dict = dict()
         target_dict["xunfeng"] = attack_list_xunfeng
         target_dict["kunpeng"] = attack_list_kunpeng
-        # target_dict["bugscan"] = attack_list_bugscan
+        target_dict["bugscan"] = attack_list_bugscan
 
         for i in target_dict.items():
 
@@ -226,7 +278,7 @@ class ControllerPocs():
                 vul = {"id": vul_id, "parent_name": self.project, "progress": "0.00%", "total_num": len(i[1]),
                        "create_date": datetime.datetime.now(), "end_time": "Null",
                        "status": "Running",
-                       "target": str(i[1]), "flag": i[0], "pid": self.pid}
+                       "target": json.dumps(i[1], ensure_ascii=False), "flag": i[0], "pid": self.pid}
 
                 mongo.db.vuldocker.insert_one(vul)
 
@@ -252,7 +304,7 @@ class ControllerPocs():
 
             progress = now_progress / count
 
-            progress = '%.2f' % (progress)
+            progress = '%.2f' % progress
             percent = f"{progress}%"
 
             if percent == "100.00%":

@@ -44,6 +44,7 @@ class Controller(object):
         :param uid: c2385a01-bb0a-40a3-8694-05a31a440ba6
         :return:
         """
+
         # 有任务在执行的时候先暂停
         while True:
 
@@ -52,10 +53,26 @@ class Controller(object):
             if task is None:
                 return True
 
-            if mongo.db.tasks.find({'status': "Running"}).count() > 1:
+            if mongo.db.tasks.find({'status': "Running", "hack_type": "域名扫描"}).count() > 1:
+                mongo.db.tasks.update_one(
+                    {"id": uid},
+                    {'$set': {
+                        'status': 'Waiting',
+                    }
+                    }
+                )
                 time.sleep(5)
 
             else:
+
+                mongo.db.tasks.update_one(
+                    {"id": uid},
+                    {'$set': {
+                        'status': 'Running',
+                    }
+                    }
+                )
+
                 break
 
         contain = DOCKER_CLIENT.containers.run("ap0llo/oneforall:0.0.9", [uid], remove=True, detach=True,
@@ -130,10 +147,26 @@ class Controller(object):
             if task is None:
                 return True
 
-            if mongo.db.tasks.find({'status': "Running"}).count() > 1:
+            if mongo.db.tasks.find({'status': "Running", "hack_type": "端口扫描"}).count() > 1:
+                mongo.db.tasks.update_one(
+                    {"id": uid},
+                    {'$set': {
+                        'status': 'Waiting',
+                    }
+                    }
+                )
                 time.sleep(5)
 
             else:
+
+                mongo.db.tasks.update_one(
+                    {"id": uid},
+                    {'$set': {
+                        'status': 'Running',
+                    }
+                    }
+                )
+
                 break
 
         contain = DOCKER_CLIENT.containers.run("ap0llo/nmap:7.80", [uid], remove=True, detach=True,
