@@ -267,7 +267,7 @@ def ports_controllers():
         if action == "export":
             if mongo.db.tasks.find_one({'id': task_id})["status"] != "Finished":
                 result = {"status": 403, "msg": "任务还没有完成"}
-                return jsonify(result, safe=False)
+                return jsonify(result)
 
             new_target = []
 
