@@ -9,7 +9,6 @@ import threading
 import time
 import queue
 import json
-import ast
 
 THREADS = 10
 
