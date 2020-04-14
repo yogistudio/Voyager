@@ -153,10 +153,12 @@ def ports_controllers():
                 for i in task_subdomain:
 
                     lm = i["ips"]
-                    ips = lm.split(",")
-                    # 如果一个域名解析出了五个及以上的地址就认为是有CDN
-                    if len(ips) < 5:
-                        new_list = new_list + ips
+
+                    if lm is not None and len(lm) > 0:
+                        ips = lm.split(",")
+                        # 如果一个域名解析出了五个及以上的地址就认为是有CDN
+                        if len(ips) < 5:
+                            new_list = new_list + ips
 
                 ips_list = list_duplicate(new_list)
 
