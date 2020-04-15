@@ -20,7 +20,7 @@ from app.blueprint import admin
 from app.blueprint import admin_required
 from app.extensions import mongo
 
-RATE = 10000
+RATE = 3000
 THREADS = 5
 
 
@@ -282,6 +282,10 @@ def ports_controllers():
             new_target = []
 
             ports = mongo.db.ports.find({'pid': task_id})
+
+            if ports.count() == 0:
+                result = {"status": 403, "msg": "资产数为0"}
+                return jsonify(result)
 
             for i in ports:
                 new_dict = dict()
