@@ -65,6 +65,8 @@ def ports_add():
         new_list = list()
         for i in items:
             new_list.append(i["project"])
+
+        new_list.reverse()
         return render_template('ports/ports_add.html', items=new_list)
 
     if request.method == "POST":
